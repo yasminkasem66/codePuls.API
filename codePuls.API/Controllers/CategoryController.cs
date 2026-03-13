@@ -30,7 +30,7 @@ namespace codePuls.API.Controllers
                 UrlHandle = request.UrlHandle
             };
 
-            await categoryRepository.CreateAsync(category);
+            Category category1 = await categoryRepository.CreateAsync(category);
 
             // Domain model to DTO
             var response = new CategoryDto
@@ -94,42 +94,42 @@ namespace codePuls.API.Controllers
         }
 
         // PUT: https://localhost:7226/api/categories/{id}
-        //[HttpPut]
-        //[Route("{id:Guid}")]
+        [HttpPut]
+        [Route("{id:Guid}")]
         //[Authorize(Roles = "Writer")]
-        //public async Task<IActionResult> EditCategory([FromRoute] Guid id, UpdateCategoryRequestDto request)
-        //{
-        //    // Convert DTO to Domain Model
-        //    var category = new Category
-        //    {
-        //        Id = id,
-        //        Name = request.Name,
-        //        UrlHandle = request.UrlHandle
-        //    };
+        public async Task<IActionResult> EditCategory([FromRoute] Guid id, UpdateCategoryRequestDto request)
+        {
+            // Convert DTO to Domain Model
+            var category = new Category
+            {
+                Id = id,
+                Name = request.Name,
+                UrlHandle = request.UrlHandle
+            };
 
-        //    category = await categoryRepository.UpdateAsync(category);
+            category = await categoryRepository.UpdateAsync(category);
 
-        //    if (category == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (category == null)
+            {
+                return NotFound();
+            }
 
-        //    // Convert Domain model to DTO
-        //    var response = new CategoryDto
-        //    {
-        //        Id = category.Id,
-        //        Name = category.Name,
-        //        UrlHandle = category.UrlHandle
-        //    };
+            // Convert Domain model to DTO
+            var response = new CategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name,
+                UrlHandle = category.UrlHandle
+            };
 
-        //    return Ok(response);
-        //}
+            return Ok(response);
+        }
 
 
         // DELETE: https://localhost:7226/api/categories/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
-        [Authorize(Roles = "Writer")]
+        //[Authorize(Roles = "Writer")]
         public async Task<IActionResult> DeleteCategory([FromRoute] Guid id)
         {
             var category = await categoryRepository.DeleteAsync(id);
