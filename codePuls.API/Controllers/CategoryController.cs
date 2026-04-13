@@ -1,6 +1,6 @@
 ﻿using codePuls.API.Models.Domain;
 using codePuls.API.Models.DTO;
-using CodePulse.API.Repositories.Interface;
+using CodePuls.API.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,8 @@
-using CodePulse.API.Data;
-using CodePulse.API.Repositories.Implementation;
-using CodePulse.API.Repositories.Interface;
+using codePuls.API.Repositories.Implementation;
+using codePuls.API.Repositories.Interface;
+using CodePuls.API.Data;
+using CodePuls.API.Repositories.Implementation;
+using CodePuls.API.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -16,6 +18,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

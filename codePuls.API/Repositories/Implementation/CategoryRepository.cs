@@ -1,9 +1,9 @@
 ﻿using codePuls.API.Models.Domain;
-using CodePulse.API.Data;
-using CodePulse.API.Repositories.Interface;
+using CodePuls.API.Data;
+using CodePuls.API.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
 
-namespace CodePulse.API.Repositories.Implementation;
+namespace CodePuls.API.Repositories.Implementation;
 
 public class CategoryRepository : ICategoryRepository
 {
