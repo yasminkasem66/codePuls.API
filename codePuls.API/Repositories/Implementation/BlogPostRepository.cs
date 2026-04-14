@@ -1,6 +1,7 @@
 ﻿using codePuls.API.Models.Domain;
 using codePuls.API.Repositories.Interface;
 using CodePuls.API.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace codePuls.API.Repositories.Implementation
 {
@@ -35,10 +36,14 @@ namespace codePuls.API.Repositories.Implementation
         //    return null;
         //}
 
-        //public async Task<IEnumerable<BlogPost>> GetAllAsync()
-        //{
-        //    return await dbContext.BlogPosts.Include(x => x.Categories).ToListAsync();
-        //}
+        public async Task<IEnumerable<BlogPost>> GetAllAsync()
+        {
+            return await dbContext.BlogPosts.Include(x => x.Categories).ToListAsync();
+     //       return await dbContext.BlogPosts
+     //.Include(b => b.Categories)
+     //.ToListAsync();
+
+        }
 
         //public async Task<BlogPost?> GetByIdAsync(Guid id)
         //{
