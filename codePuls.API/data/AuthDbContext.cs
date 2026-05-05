@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace codePuls.API.data
 {
@@ -8,6 +9,14 @@ namespace codePuls.API.data
     {
         public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options)
         {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+            // Suppress EF Core warning caused by dynamic values used in HasData (e.g. password hash)
+            optionsBuilder.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -75,4 +84,3 @@ namespace codePuls.API.data
         }
     }
 }
-  
