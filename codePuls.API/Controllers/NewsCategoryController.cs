@@ -1,9 +1,10 @@
-﻿using codePuls.API.Models.Domain;
+﻿using Azure;
+using codePuls.API.Models.Domain;
+using codePuls.API.Models.DTO;
 using codePuls.API.Models.DTO;
 using codePuls.API.Repositories.Interface;
 using CodePuls.API.Repositories.Interface;
 using Microsoft.AspNetCore.Mvc;
-using codePuls.API.Models.DTO;
 
 namespace codePuls.API.Controllers
 {
@@ -144,33 +145,36 @@ namespace codePuls.API.Controllers
         [Route("{urlHandle}")]
         public async Task<IActionResult> GetBlogPostByUrlHandle([FromRoute] string urlHandle)
         {
-            var blogPost = await newsCategoryRepository.GetByUrlHandleAsync(urlHandle);
+            //var blogPost = await newsCategoryRepository.GetByUrlHandleAsync(urlHandle);
 
-            if (blogPost is null)
-            {
-                return NotFound();
-            }
+            //if (blogPost is null)
+            //{
+            //    return NotFound();
+            //}
 
-            var response = new NewsCategoryDto
-            {
-                Id = blogPost.Id,
-                Author = blogPost.Author,
-                Content = blogPost.Content,
-                FeaturedImageUrl = blogPost.FeaturedImageUrl,
-                IsVisible = blogPost.IsVisible,
-                PublishedDate = blogPost.PublishedDate,
-                ShortDescription = blogPost.ShortDescription,
-                Title = blogPost.Title,
-                UrlHandle = blogPost.UrlHandle,
-                Categories = (blogPost.Categories ?? new List<Category>()).Select(x => new CategoryDto
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    UrlHandle = x.UrlHandle
-                }).ToList()
-            };
+            //var response = new NewsCategoryDto
+            //{
+            //    Id = blogPost.Id,
+            //    Author = blogPost.Author,
+            //    Content = blogPost.Content,
+            //    FeaturedImageUrl = blogPost.FeaturedImageUrl,
+            //    IsVisible = blogPost.IsVisible,
+            //    PublishedDate = blogPost.PublishedDate,
+            //    ShortDescription = blogPost.ShortDescription,
+            //    Title = blogPost.Title,
+            //    UrlHandle = blogPost.UrlHandle,
+            //    Categories = (blogPost.Categories ?? new List<Category>()).Select(x => new CategoryDto
+            //    {
+            //        Id = x.Id,
+            //        Name = x.Name,
+            //        UrlHandle = x.UrlHandle
+            //    }).ToList()
+            //};
 
-            return Ok(response);
+            //return Ok(response);
+
+            return Ok(null);
+
         }
 
         // PUT: {apibaseurl}/api/blogposts/{id}
