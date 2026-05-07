@@ -1,35 +1,32 @@
 ﻿using codePuls.API.Models.Domain;
 using codePuls.API.Models.DTO;
 using codePuls.API.Repositories.Interface;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using CodePuls.API.Repositories.Interface;
-
+using Microsoft.AspNetCore.Mvc;
+using codePuls.API.Models.DTO;
 
 namespace codePuls.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BlogPostsController : ControllerBase
+    public class NewsCategoryController : ControllerBase
     {
-        private readonly IBlogPostRepository blogPostRepository;
+        private readonly INewsCategory newsCategoryRepository;
         private readonly ICategoryRepository categoryRepository;
 
-        public BlogPostsController(IBlogPostRepository blogPostRepository,
+        public NewsCategoryController(INewsCategory newsCategoryRepository,
             ICategoryRepository categoryRepository)
         {
-            this.blogPostRepository = blogPostRepository;
+            this.newsCategoryRepository = newsCategoryRepository;
             this.categoryRepository = categoryRepository;
         }
 
         // POST: {apibaseurl}/api/blogposts
         [HttpPost]
-        //[Authorize(Roles = "Writer")]
-        public async Task<IActionResult> CreateBlogPost([FromBody] CreateBlogPostRequestDto request)
+        public async Task<IActionResult> CreateBlogPost([FromBody] CreateNewsCategoryRequestDto request)
         {
-            // Convert DTO to DOmain
-            var blogPost = new BlogPost
+            // Convert DTO to Domain
+            var blogPost = new codePuls.API.Models.Domain.NewsCategory
             {
                 Author = request.Author,
                 Content = request.Content,
@@ -42,7 +39,6 @@ namespace codePuls.API.Controllers
                 Categories = new List<Category>()
             };
 
-
             foreach (var categoryGuid in request.Categories)
             {
                 var existingCategory = await categoryRepository.GetById(categoryGuid);
@@ -52,10 +48,10 @@ namespace codePuls.API.Controllers
                 }
             }
 
-            blogPost = await blogPostRepository.CreateAsync(blogPost);
+            blogPost = await newsCategoryRepository.CreateAsync(blogPost);
 
             // Convert Domain Model back to DTO
-            var response = new BlogPostDto
+            var response = new NewsCategoryDto
             {
                 Id = blogPost.Id,
                 Author = blogPost.Author,
@@ -73,22 +69,20 @@ namespace codePuls.API.Controllers
                     UrlHandle = x.UrlHandle
                 }).ToList()
             };
-
+                        
             return Ok(response);
         }
-
 
         // GET: {apibaseurl}/api/blogposts
         [HttpGet]
         public async Task<IActionResult> GetAllBlogPosts()
         {
-            var blogPosts = await blogPostRepository.GetAllAsync();
+            var blogPosts = await newsCategoryRepository.GetAllAsync();
 
-            // Convert Domain model to DTO
-            var response = new List<BlogPostDto>();
+            var response = new List<NewsCategoryDto>();
             foreach (var blogPost in blogPosts)
             {
-                response.Add(new BlogPostDto
+                response.Add(new NewsCategoryDto
                 {
                     Id = blogPost.Id,
                     Author = blogPost.Author,
@@ -99,7 +93,7 @@ namespace codePuls.API.Controllers
                     ShortDescription = blogPost.ShortDescription,
                     Title = blogPost.Title,
                     UrlHandle = blogPost.UrlHandle,
-                    Categories = blogPost.Categories.Select(x => new CategoryDto
+                    Categories = (blogPost.Categories ?? new List<Category>()).Select(x => new CategoryDto
                     {
                         Id = x.Id,
                         Name = x.Name,
@@ -111,22 +105,19 @@ namespace codePuls.API.Controllers
             return Ok(response);
         }
 
-
-        //// GET: {apiBaseUrl}/api/blogposts/{id}
+        // GET: {apiBaseUrl}/api/blogposts/{id}
         [HttpGet]
         [Route("{id:Guid}")]
         public async Task<IActionResult> GetBlogPostById([FromRoute] Guid id)
         {
-            // Get the BlogPost from Repo
-            var blogPost = await blogPostRepository.GetByIdAsync(id);
+            var blogPost = await newsCategoryRepository.GetByIdAsync(id);
 
             if (blogPost is null)
             {
                 return NotFound();
             }
 
-            // Convert Domain Model to DTO
-            var response = new BlogPostDto
+            var response = new NewsCategoryDto
             {
                 Id = blogPost.Id,
                 Author = blogPost.Author,
@@ -137,7 +128,7 @@ namespace codePuls.API.Controllers
                 ShortDescription = blogPost.ShortDescription,
                 Title = blogPost.Title,
                 UrlHandle = blogPost.UrlHandle,
-                Categories = blogPost.Categories.Select(x => new CategoryDto
+                Categories = (blogPost.Categories ?? new List<Category>()).Select(x => new CategoryDto
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -148,22 +139,19 @@ namespace codePuls.API.Controllers
             return Ok(response);
         }
 
-
         // GET: {apibaseurl}/api/blogPosts/{urlhandle}
         [HttpGet]
         [Route("{urlHandle}")]
         public async Task<IActionResult> GetBlogPostByUrlHandle([FromRoute] string urlHandle)
         {
-            // Get blogpost details from repository
-            var blogPost = await blogPostRepository.GetByUrlHandleAsync(urlHandle);
+            var blogPost = await newsCategoryRepository.GetByUrlHandleAsync(urlHandle);
 
             if (blogPost is null)
             {
                 return NotFound();
             }
 
-            // Convert Domain Model to DTO
-            var response = new BlogPostDto
+            var response = new NewsCategoryDto
             {
                 Id = blogPost.Id,
                 Author = blogPost.Author,
@@ -174,7 +162,7 @@ namespace codePuls.API.Controllers
                 ShortDescription = blogPost.ShortDescription,
                 Title = blogPost.Title,
                 UrlHandle = blogPost.UrlHandle,
-                Categories = blogPost.Categories.Select(x => new CategoryDto
+                Categories = (blogPost.Categories ?? new List<Category>()).Select(x => new CategoryDto
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -188,11 +176,9 @@ namespace codePuls.API.Controllers
         // PUT: {apibaseurl}/api/blogposts/{id}
         [HttpPut]
         [Route("{id:Guid}")]
-        //[Authorize(Roles = "Writer")]
         public async Task<IActionResult> UpdateBlogPostById([FromRoute] Guid id, UpdateBlogPostRequestDto request)
         {
-            // Convert DTO to Domain Model
-            var blogPost = new BlogPost
+            var blogPost = new codePuls.API.Models.Domain.NewsCategory
             {
                 Id = id,
                 Author = request.Author,
@@ -206,7 +192,6 @@ namespace codePuls.API.Controllers
                 Categories = new List<Category>()
             };
 
-            // Foreach 
             foreach (var categoryGuid in request.Categories)
             {
                 var existingCategory = await categoryRepository.GetById(categoryGuid);
@@ -217,17 +202,14 @@ namespace codePuls.API.Controllers
                 }
             }
 
-
-            // Call Repository To Update BlogPost Domain Model
-            var updatedBlogPost = await blogPostRepository.UpdateAsync(blogPost);
+            var updatedBlogPost = await newsCategoryRepository.UpdateAsync(blogPost);
 
             if (updatedBlogPost == null)
             {
                 return NotFound();
             }
 
-            // Convert Domain model back to DTO
-            var response = new BlogPostDto
+            var response = new NewsCategoryDto
             {
                 Id = blogPost.Id,
                 Author = blogPost.Author,
@@ -252,18 +234,16 @@ namespace codePuls.API.Controllers
         // DELETE: {apibaseurl}/api/blogposts/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
-        //[Authorize(Roles = "Writer")]
         public async Task<IActionResult> DeleteBlogPost([FromRoute] Guid id)
         {
-            var deletedBlogPost = await blogPostRepository.DeleteAsync(id);
+            var deletedBlogPost = await newsCategoryRepository.DeleteAsync(id);
 
             if (deletedBlogPost == null)
             {
                 return NotFound();
             }
 
-            // Convert Domain model to DTO
-            var response = new BlogPostDto
+            var response = new NewsCategoryDto
             {
                 Id = deletedBlogPost.Id,
                 Author = deletedBlogPost.Author,
@@ -279,4 +259,19 @@ namespace codePuls.API.Controllers
             return Ok(response);
         }
     }
+
+    internal class NewsCategoryDto
+    {
+        public Guid Id { get; set; }
+        public string Author { get; set; }
+        public string Content { get; set; }
+        public string FeaturedImageUrl { get; set; }
+        public bool IsVisible { get; set; }
+        public DateTime PublishedDate { get; set; }
+        public string ShortDescription { get; set; }
+        public string Title { get; set; }
+        public string UrlHandle { get; set; }
+        public List<CategoryDto> Categories { get; set; }
+    }
 }
+

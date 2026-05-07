@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\DTO\NewsCategoryDto.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7" />
@@ -26,6 +30,10 @@
 
   <ItemGroup>
     <Folder Include="Images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Models\DTO\NewsCategoryDto.cs" />
   </ItemGroup>
 
 </Project>
