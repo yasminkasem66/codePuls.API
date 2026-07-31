@@ -36,4 +36,10 @@
     <None Include="Models\DTO\NewsCategoryDto.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="appsettings.Development.json">
+      <CustomToolNamespace>  </CustomToolNamespace>
+    </Content>
+  </ItemGroup>
+
 </Project>

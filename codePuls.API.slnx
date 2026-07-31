@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="../webApiCourse/webApiCourse.csproj" Id="fa79fe7e-3743-41d3-9eca-481836bc89bd" />
   <Project Path="codePuls.API/codePuls.API.csproj" />
 </Solution>
